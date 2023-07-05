@@ -166,7 +166,6 @@ class ProductController extends Controller
         ]);
         return redirect()->route('showArchiveProduct')->with('success', 'Product Unarchive successfully');
     }
-
     public function search(Request $request)
     {
         $search = $request->search;

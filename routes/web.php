@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\OrderController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -42,4 +43,8 @@ Route::group([ 'prefix'=>'product', 'middleware'=>'custom_auth'],function(){
     Route::get('/delete/{id}', [ProductController::class, 'destroy'])->name('deleteProduct');
     Route::get('/unArchive/{id}', [ProductController::class, 'unArchive'])->name('unArchiveProduct');
     Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
+});
+
+Route::group(['prefix'=>'order', 'middleware'=>'custom_auth'], function(){
+    Route::get('/show', [OrderController::class, 'index'])->name('showOrder');
 });
