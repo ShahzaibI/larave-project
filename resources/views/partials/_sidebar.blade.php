@@ -12,5 +12,8 @@
         <li class="nav-item py-2 bg-info rounded mb-2">
             <a class="nav-link" href="{{ route('showArchiveProduct') }}">-->Archive Product</a>
         </li>
+        <li class="nav-item py-2 bg-info rounded mb-2">
+            <a class="nav-link" href="{{ route('showOrder') }}">-->Orders List</a>
+        </li>
     </ul>
 </div>
