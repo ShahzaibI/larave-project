@@ -12,6 +12,22 @@
                     <div class="py-3">
                         <a href="{{ route('createProduct') }}" class="btn btn-primary">Add new Product</a>
                     </div>
+                    <form action="{{ route('searchProduct') }}" method="GET" class="pb-3">
+                        <label class="form-label" for="form1">Search</label>
+                        <div class="input-group ">
+                            <div class="form-outline">
+                              <input type="search" id="form1" name="search" class="form-control" placeholder="Enter Name or SKU" value="{{ (isset($search))? $search : '' }}" />
+                            </div>
+                            @if(@isset($search))
+                                <a href="{{ route('showProduct') }}" class="btn btn-warning">
+                                    <i class="fas fa-refresh text-light"></i>
+                                </a>
+                            @endif
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fas fa-search"></i>
+                            </button>
+                        </div>
+                    </form>
                     {{-- <div class="row fw-bold">
                         <div class="col">Name</div>
                         <div class="col">Price</div>
@@ -55,7 +71,7 @@
                                         <div class="dropdown">
                                             <a class="dropdown-toggle btn btn-outline-info btn-sm" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">Action</a>
                                             <ul class="dropdown-menu">
-                                                <li><a class="dropdown-item" href="#">Edit</a></li>
+                                                <li><a class="dropdown-item" href="{{ route('editProduct',$product['id']) }}">Edit</a></li>
                                                 <li><a class="dropdown-item" href="{{ route('deleteProduct', $product['id']) }}">Delete</a></li>
                                             </ul>
                                         </div>

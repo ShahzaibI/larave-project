@@ -35,8 +35,11 @@ Route::group([ 'prefix'=>'product', 'middleware'=>'custom_auth'],function(){
     Route::get('/dashboard', [ProductController::class, 'dashboard'])->name('dashboardProduct');
     Route::get('/show', [ProductController::class, 'index'])->name('showProduct');
     Route::get('/create', [ProductController::class, 'create'])->name('createProduct');
+    Route::get('/edit/{id}', [ProductController::class, 'edit'])->name('editProduct');
+    Route::post('/update/{id}', [ProductController::class, 'update'])->name('updateProduct');
     Route::post('/store', [ProductController::class, 'store'])->name('storeProduct');
     Route::get('/archive', [ProductController::class, 'archive'])->name('showArchiveProduct');
     Route::get('/delete/{id}', [ProductController::class, 'destroy'])->name('deleteProduct');
     Route::get('/unArchive/{id}', [ProductController::class, 'unArchive'])->name('unArchiveProduct');
+    Route::get('/search', [ProductController::class, 'search'])->name('searchProduct');
 });

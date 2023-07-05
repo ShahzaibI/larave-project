@@ -1,8 +1,8 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Models\Category;
 use App\Models\Product;
 use Illuminate\Http\Request;
@@ -23,8 +23,8 @@ class ProductController extends Controller
     public function index()
     {
         // $products = DB::table('products')->join('product_category', 'products.id', '=', 'product_category.product_id')->join('categories', 'product_category.category_id', '=', 'categories.id')->select('products.*', 'categories.*')->where('products.archive', 0)->get();
-
-        $products = Product::active()->with('getCategories')->paginate(3);
+        $p = new Product();
+        $products = $p->getActiveDataWithCategories()->paginate(3);
         // $request_params = $products;
         // echo "<pre>";
         // print_r($request_params);
@@ -54,9 +54,23 @@ class ProductController extends Controller
      */
     public function store(StoreProductRequest $request)
     {
-        dd('ok');
-    }
+        $photo_name = $request->file('productImage')->getClientOriginalName();
+        $path = $request->file('productImage')->storeAs('public/images', $photo_name);
+        $Product_data = [];
+        $Product_data['product_name'] = $request->name;
+        $Product_data['product_description'] = $request->productDescription;
+        $Product_data['price'] = $request->price;
+        $Product_data['stock'] = $request->stock;
+        $Product_data['product_image'] = $photo_name;
+        $Product_data['product_sku'] = $request->skuNumber;
+        $product = Product::create($Product_data);
 
+        // Store data in junction table
+        $category = Category::where('category_name', $request->productCategory)->first();
+        $product->getCategories()->attach($category['id']);
+
+        return redirect()->route('showProduct')->with('success', 'Product created successfully');
+    }
     /**
      * Display the specified resource.
      *
@@ -76,7 +90,9 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        //
+        $product = Product::with('getCategories')->where('id', $id)->first();
+        $categories = Category::get();
+        return view('product.edit', compact('product', 'categories'));
     }
 
     /**
@@ -86,9 +102,30 @@ class ProductController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProductRequest $request, $id)
     {
-        //
+        $product = Product::find($id);
+        if($request->hasFile('productImage'))
+        {
+            $photo_name = $request->file('productImage')->getClientOriginalName();
+            $path = $request->file('productImage')->storeAs('public/images', $photo_name);
+        }
+        else
+        {
+            $photo_name = $product->product_image;
+        }
+        $Product_data = [];
+        $Product_data['product_name'] = $request->name;
+        $Product_data['product_description'] = $request->productDescription;
+        $Product_data['price'] = $request->price;
+        $Product_data['stock'] = $request->stock;
+        $Product_data['product_image'] = $photo_name;
+        $Product_data['product_sku'] = $request->skuNumber;
+        // dd($Product_data);
+        $product->update($Product_data);
+        $category_id = $request->productCategory;
+        $product->getCategories()->sync($category_id);
+        return redirect()->route('showProduct')->with('success', 'Product updated successfully');
     }
 
     /**
@@ -107,7 +144,6 @@ class ProductController extends Controller
         return redirect()->route('showProduct')->with('success', 'Product archived successfully');
     }
 
-
     public function archive()
     {
         // $request_params = $products;
@@ -116,9 +152,11 @@ class ProductController extends Controller
         // die();
         // echo json_encode($products);
         // dd($products);
-        $products = Product::unActive()->with('getCategories')->paginate(3);
+        $p = new Product();
+        $products = $p->getUnactiveDataWithCategories()->paginate(3);
         return view('product.archive', compact('products'));
     }
+
     public function unArchive($id)
     {
         $product = Product::find($id);
@@ -128,4 +166,13 @@ class ProductController extends Controller
         ]);
         return redirect()->route('showArchiveProduct')->with('success', 'Product Unarchive successfully');
     }
+
+    public function search(Request $request)
+    {
+        $search = $request->search;
+        $p = new Product();
+        $products = $p->getSearchedProducts($search)->paginate(3);
+        return view('product.show', compact('products', 'search'));
+    }
 }
+
