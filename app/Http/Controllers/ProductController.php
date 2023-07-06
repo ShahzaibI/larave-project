@@ -174,4 +174,3 @@ class ProductController extends Controller
         return view('product.show', compact('products', 'search'));
     }
 }
-
