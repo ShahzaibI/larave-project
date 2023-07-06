@@ -22,6 +22,10 @@ class Product extends Model
     {
         return static::where('archive', 0)->with('getCategories');
     }
+    public function getUnactiveDataWithCategories()
+    {
+        return static::where('archive', 1)->with('getCategories');
+    }
 
     public function getSearchedProducts($search)
     {
