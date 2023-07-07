@@ -26,11 +26,11 @@ class StoreUserRequest extends FormRequest
         return [
             'firstName' => 'required|max:255',
             'lastName' => 'required|max:255',
-            'user_name' => 'required|max:255|unique:customers',
+            'user_name' => 'required|max:255|unique:users',
             'gender' => 'required|in:male,female',
-            'email_address' => 'required|regex:/^.+@.+$/i|unique:customers|email',
+            'email_address' => 'required|regex:/^.+@.+$/i|unique:users|email',
             'password' => 'required|min:8',
-            'phone' => 'required|regex:/^\+923\d{9}$/|unique:customers',
+            'phone' => 'required|regex:/^\+923\d{9}$/|unique:users',
         ];
     }
 }

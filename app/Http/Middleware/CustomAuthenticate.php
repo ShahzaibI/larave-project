@@ -18,11 +18,9 @@ class CustomAuthenticate
     public function handle(Request $request, Closure $next)
     {
         // if(session()->has('user_id'))
+
         if(Auth::check())
         {
-
-
-
             return $next($request);
         }
         else

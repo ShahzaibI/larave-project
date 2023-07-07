@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use App\Models\Order;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Mail;
 
 class OrderController extends Controller
 {
@@ -82,5 +84,19 @@ class OrderController extends Controller
     public function destroy($id)
     {
         //
+    }
+
+    public function sendEmail()
+    {
+        // dd(auth()->id());
+        $data=['name'=>"Shahzaib",'data'=>"Hello"];
+        $user['to']= 'shahzaibdev404@gmail.com';
+        $user['subject']= 'Your Order detail';
+        Mail::send('order.email', $data, function($mesages) use($user){
+            $mesages->to($user['to']);
+            $mesages->subject($user['subject']);
+        });
+
+        return redirect()->route('showOrder')->with('success', 'Email send Successfully');
     }
 }

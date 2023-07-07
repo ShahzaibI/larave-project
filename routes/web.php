@@ -47,4 +47,5 @@ Route::group([ 'prefix'=>'product', 'middleware'=>'custom_auth'],function(){
 
 Route::group(['prefix'=>'order', 'middleware'=>'custom_auth'], function(){
     Route::get('/show', [OrderController::class, 'index'])->name('showOrder');
+    Route::get('/send-email', [OrderController::class, 'sendEmail'])->name('sendEmail');
 });
