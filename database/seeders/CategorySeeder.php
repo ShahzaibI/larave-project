@@ -2,6 +2,8 @@
 
 namespace Database\Seeders;
 
+use App\Models\Category;
+use Database\Factories\CategoryFactory;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 
@@ -42,10 +44,11 @@ class CategorySeeder extends Seeder
         ];
         foreach($categories as $category)
         {
-            DB::table('categories')->insert([
-                'category_name' => $category['category_name'],
-                'category_description' => $category['category_name'],
-            ]);
+            CategoryFactory::new()->create($category);
+            // Category::factory()->create([
+            //     'category_name' => $category['category_name'],
+            //     'category_description' => $category['category_name'],
+            // ]);
         }
     }
 }
