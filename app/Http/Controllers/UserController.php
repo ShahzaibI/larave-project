@@ -44,7 +44,8 @@ class UserController extends Controller
         // echo "<pre>";
         // print_r($request_params);
         // die();
-        $exist_email = User::where('email_address', $request->email_address)->get();
+        $user = new User();
+        $exist_email = $user->getUserByEmail($request->email_address);
         if(!$exist_email->isEmpty())
         {
             // dd($exist_email);

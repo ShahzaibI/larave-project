@@ -9,4 +9,9 @@ class Order extends Model
 {
     // use HasFactory;
     protected $fillable = ['user_id', 'order_date', 'status', 'invoice_number'];
+
+    public function getOrders()
+    {
+        return $this->get();
+    }
 }

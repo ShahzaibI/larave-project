@@ -16,7 +16,8 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $orders = Order::get();
+        $order = new Order();
+        $orders = $order->getOrders();
         return view('order.show', compact('orders'));
     }
 

@@ -14,4 +14,8 @@ class Category extends Model
     // {
     //     return $this->belongsToMany(Product::class, 'product_category');
     // }
+    public function getCategories()
+    {
+        return $this->get();
+    }
 }

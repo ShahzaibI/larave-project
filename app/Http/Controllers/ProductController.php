@@ -23,8 +23,8 @@ class ProductController extends Controller
     public function index()
     {
         // $products = DB::table('products')->join('product_category', 'products.id', '=', 'product_category.product_id')->join('categories', 'product_category.category_id', '=', 'categories.id')->select('products.*', 'categories.*')->where('products.archive', 0)->get();
-        $p = new Product();
-        $products = $p->getActiveDataWithCategories()->paginate(3);
+        $product = new Product();
+        $products = $product->getActiveDataWithCategories()->paginate(3);
         // $request_params = $products;
         // echo "<pre>";
         // print_r($request_params);
@@ -42,7 +42,9 @@ class ProductController extends Controller
      */
     public function create()
     {
-        $categories = Category::get();
+        $category = new Category();
+        $categories = $category->getCategories();
+        // dd($categories);
         return view('product.create', compact('categories'));
     }
 
@@ -66,8 +68,8 @@ class ProductController extends Controller
         $product = Product::create($Product_data);
 
         // Store data in junction table
-        $category = Category::where('category_name', $request->productCategory)->first();
-        $product->getCategories()->attach($category['id']);
+        $category_id = $request->productCategory;
+        $product->getCategories()->attach($category_id);
 
         return redirect()->route('showProduct')->with('success', 'Product created successfully');
     }
@@ -90,9 +92,12 @@ class ProductController extends Controller
      */
     public function edit($id)
     {
-        $product = Product::with('getCategories')->where('id', $id)->first();
-        $categories = Category::get();
-        return view('product.edit', compact('product', 'categories'));
+        $product = new Product();
+        $product_data = $product->getActiveProductsById($id);
+        // dd($product_data);
+        $category = new Category();
+        $categories = $category->getCategories();
+        return view('product.edit', compact('product_data', 'categories'));
     }
 
     /**
@@ -104,7 +109,8 @@ class ProductController extends Controller
      */
     public function update(UpdateProductRequest $request, $id)
     {
-        $product = Product::find($id);
+        $product = new Product();
+        $currentProduct = $product->findProduct($id);
         if($request->hasFile('productImage'))
         {
             $photo_name = $request->file('productImage')->getClientOriginalName();
@@ -112,7 +118,7 @@ class ProductController extends Controller
         }
         else
         {
-            $photo_name = $product->product_image;
+            $photo_name = $currentProduct->product_image;
         }
         $Product_data = [];
         $Product_data['product_name'] = $request->name;
@@ -122,9 +128,9 @@ class ProductController extends Controller
         $Product_data['product_image'] = $photo_name;
         $Product_data['product_sku'] = $request->skuNumber;
         // dd($Product_data);
-        $product->update($Product_data);
+        $currentProduct->update($Product_data);
         $category_id = $request->productCategory;
-        $product->getCategories()->sync($category_id);
+        $currentProduct->getCategories()->sync($category_id);
         return redirect()->route('showProduct')->with('success', 'Product updated successfully');
     }
 
@@ -136,9 +142,10 @@ class ProductController extends Controller
      */
     public function destroy($id)
     {
-        $product = Product::find($id);
-        // dd($product);
-        $product->update([
+        $product = new Product();
+        $currentProduct = $product->findProduct($id);
+        // dd($currentProduct);
+        $currentProduct->update([
             'archive' => 1
         ]);
         return redirect()->route('showProduct')->with('success', 'Product archived successfully');
@@ -159,9 +166,10 @@ class ProductController extends Controller
 
     public function unArchive($id)
     {
-        $product = Product::find($id);
-        // dd($product);
-        $product->update([
+        $product = new Product();
+        $currentProduct = $product->findProduct($id);
+        // dd($currentProduct);
+        $currentProduct->update([
             'archive' => 0
         ]);
         return redirect()->route('showArchiveProduct')->with('success', 'Product Unarchive successfully');

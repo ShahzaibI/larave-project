@@ -6,6 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model
 {
+    use HasFactory;
     protected $fillable = ['product_name', 'product_sku', 'product_description', 'price', 'stock', 'product_image', 'archive'];
 
     public static function active()
@@ -18,9 +19,17 @@ class Product extends Model
         return $this->belongsToMany(Category::class, 'product_category');
     }
 
+    public function findProduct($id)
+    {
+        return $this->find($id);
+    }
     public function getActiveDataWithCategories()
     {
-        return static::where('archive', 0)->with('getCategories');
+        return $this->where('archive', 0)->with('getCategories');
+    }
+    public function getActiveProductsById($id)
+    {
+        return $this->where('id', $id)->with('getCategories')->first();
     }
     public function getUnactiveDataWithCategories()
     {
