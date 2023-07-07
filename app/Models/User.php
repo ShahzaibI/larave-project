@@ -16,4 +16,8 @@ class User extends Authenticatable
     protected $fillable = ['user_name', 'first_name', 'last_name', 'email_address','phone', 'gender','password'];
 
     protected $hidden = ['password'];
+    public function getUserByEmail($email)
+    {
+        return $this->where('email_address', $email)->get();
+    }
 }
