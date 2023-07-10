@@ -13,11 +13,15 @@ class User extends Authenticatable
 {
     use HasFactory, Notifiable;
     // use HasFactory;
-    protected $fillable = ['user_name', 'first_name', 'last_name', 'email_address','phone', 'gender','password'];
+    protected $fillable = ['user_name', 'first_name', 'last_name', 'email','phone', 'gender','password'];
 
     protected $hidden = ['password'];
     public function getUserByEmail($email)
     {
-        return $this->where('email_address', $email)->get();
+        return $this->where('email', $email)->get();
+    }
+    public function findUser($id)
+    {
+        return $this->find($id);
     }
 }

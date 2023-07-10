@@ -76,14 +76,14 @@
                                 <div class="row">
                                     <div class="col-md-6 mb-4 pb-2">
                                         <div class="form-outline">
-                                            <input type="email" name="email_address" id="emailAddress" class="form-control form-control-lg rounded-0"  placeholder="Email" value="{{ old('email_address') }}"/>
+                                            <input type="email" name="email" id="emailAddress" class="form-control form-control-lg rounded-0"  placeholder="Email" value="{{ old('email') }}"/>
                                             <label class="form-label" for="emailAddress">Email</label>
                                         </div>
-                                        {{-- @error('email_address')
+                                        {{-- @error('email')
                                             <span class="text-danger">{{ $message }}</span>
                                         @enderror --}}
-                                        @if($errors->has('email_address'))
-                                            <span class="text-danger">{{ $errors->first('email_address') }}</span>
+                                        @if($errors->has('email'))
+                                            <span class="text-danger">{{ $errors->first('email') }}</span>
                                         @endif
                                     </div>
                                     <div class="col-md-6 mb-4 pb-2">
