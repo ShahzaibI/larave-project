@@ -15,6 +15,7 @@
                             <ul class="dropdown-menu">
                               <li><a class="dropdown-item" href="#">Profile</a></li>
                               <li><a class="dropdown-item" href="{{ route('logoutAuth') }}">Logout</a></li>
+                              <li><a class="dropdown-item" href="{{ route('resetPassword') }}">Reset Password</a></li>
                             </ul>
                         </li>
                     @else

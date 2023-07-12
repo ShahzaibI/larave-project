@@ -12,8 +12,8 @@
                         @if(session('success'))
                             @include('partials._success')
                         @endif
-                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Login</h3>
-                        <form action="{{ route('loginAuth') }}" method="POST">
+                        <h3 class="mb-4 pb-2 pb-md-0 mb-md-5">Forgot password</h3>
+                        <form action="{{ route('forgotPasswordEmail') }}" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col-md-12 mb-4">
@@ -26,25 +26,8 @@
                                     @enderror
                                 </div>
                             </div>
-                            <div class="row">
-                                <div class="col-md-12 mb-2">
-                                    <div class="form-outline">
-                                        <input type="password" name="password" id="password" class="form-control form-control-lg rounded-0" placeholder="Password" value="{{ old('password') }}"/>
-                                        <label class="form-label" for="password">Password</label>
-                                    </div>
-                                    @error('password')
-                                        <span class="text-danger">{{ $message }}</span>
-                                    @enderror
-                                </div>
-                            </div>
-                            <div class="pt-2 text-end">
-                                <a href="{{ route('forgotPassword') }}">Forgot Password</a>
-                            </div>
                             <div class="pt-2">
-                                <input class="btn btn-outline-primary btn-lg p-0 form-control rounded-0" type="submit" value="Login" />
-                            </div>
-                            <div class="pt-2">
-                                Don't have account? <a href="{{ route('registerUser') }}">Register Now</a>
+                                <input class="btn btn-outline-primary btn-lg p-0 form-control rounded-0" type="submit" value="Forgot" />
                             </div>
                         </form>
                     </div>

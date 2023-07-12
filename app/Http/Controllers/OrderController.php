@@ -91,7 +91,7 @@ class OrderController extends Controller
     {
         // dd(auth()->id());
         $data=['name'=>"Shahzaib",'data'=>"Hello"];
-        $user['to']= 'shahzaibdev404@gmail.com';
+        $user['to']= '70078578@student.uol.edu.pk';
         $user['subject']= 'Your Order detail';
         Mail::send('order.email', $data, function($mesages) use($user){
             $mesages->to($user['to']);
