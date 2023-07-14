@@ -16,9 +16,7 @@ class OrderController extends Controller
      */
     public function index()
     {
-        $order = new Order();
-        $orders = $order->getOrders();
-        return view('order.show', compact('orders'));
+        return $this->getOrderService()->index();
     }
 
     /**
@@ -89,15 +87,6 @@ class OrderController extends Controller
 
     public function sendEmail()
     {
-        // dd(auth()->id());
-        $data=['name'=>"Shahzaib",'data'=>"Hello"];
-        $user['to']= '70078578@student.uol.edu.pk';
-        $user['subject']= 'Your Order detail';
-        Mail::send('order.email', $data, function($mesages) use($user){
-            $mesages->to($user['to']);
-            $mesages->subject($user['subject']);
-        });
-
-        return redirect()->route('showOrder')->with('success', 'Email send Successfully');
+        return $this->getOrderService()->sendEmail();
     }
 }

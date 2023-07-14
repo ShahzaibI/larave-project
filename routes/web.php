@@ -36,7 +36,7 @@ Route::group(['prefix'=>'user'],function(){
     // Forgot password
     Route::get('/forgot-password', [UserController::class, 'forgotPassword'])->name('forgotPassword');
 
-    Route::post('/forgot-password-email', [UserController::class, 'forgotPasswordEmail'])->name('forgotPasswordEmail');
+    Route::post('/forgot-password-email', [UserController::class, 'sentForgotPasswordEmail'])->name('forgotPasswordEmail');
 
     Route::get('/reset-password/{token}',[UserController::class, 'resetForm'])->name('password.reset');
 
