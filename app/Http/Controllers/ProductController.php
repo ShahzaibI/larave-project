@@ -10,175 +10,52 @@ use Illuminate\Support\Facades\DB;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function dashboard()
     {
-
-        return view('product.dashboard');
+        return $this->getProductService()->dashboard();
     }
+
     public function index()
     {
-        // $products = DB::table('products')->join('product_category', 'products.id', '=', 'product_category.product_id')->join('categories', 'product_category.category_id', '=', 'categories.id')->select('products.*', 'categories.*')->where('products.archive', 0)->get();
-        $product = new Product();
-        $products = $product->getActiveDataWithCategories()->paginate(3);
-        // $request_params = $products;
-        // echo "<pre>";
-        // print_r($request_params);
-        // die();
-        // echo json_encode($products);
-        // dd($products);
-        return view('product.show', compact('products'));
-
+        return $this->getProductService()->index();
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
     public function create()
     {
-        $category = new Category();
-        $categories = $category->getCategories();
-        // dd($categories);
-        return view('product.create', compact('categories'));
+        return $this->getProductService()->create();
     }
 
-    /**
-     * Store a newly created resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \Illuminate\Http\Response
-     */
     public function store(StoreProductRequest $request)
     {
-        $photo_name = $request->file('productImage')->getClientOriginalName();
-        $path = $request->file('productImage')->storeAs('public/images', $photo_name);
-        $Product_data = [];
-        $Product_data['product_name'] = $request->name;
-        $Product_data['product_description'] = $request->productDescription;
-        $Product_data['price'] = $request->price;
-        $Product_data['stock'] = $request->stock;
-        $Product_data['product_image'] = $photo_name;
-        $Product_data['product_sku'] = $request->skuNumber;
-        $product = Product::create($Product_data);
-
-        // Store data in junction table
-        $category_id = $request->productCategory;
-        $product->getCategories()->attach($category_id);
-
-        return redirect()->route('showProduct')->with('success', 'Product created successfully');
-    }
-    /**
-     * Display the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
-    public function show($id)
-    {
-        //
+        return $this->getProductService()->store($request);
     }
 
-    /**
-     * Show the form for editing the specified resource.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function edit($id)
     {
-        $product = new Product();
-        $product_data = $product->getActiveProductsById($id);
-        // dd($product_data);
-        $category = new Category();
-        $categories = $category->getCategories();
-        return view('product.edit', compact('product_data', 'categories'));
+        return $this->getProductService()->edit($id);
     }
 
-    /**
-     * Update the specified resource in storage.
-     *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function update(UpdateProductRequest $request, $id)
     {
-        $product = new Product();
-        $currentProduct = $product->findProduct($id);
-        if($request->hasFile('productImage'))
-        {
-            $photo_name = $request->file('productImage')->getClientOriginalName();
-            $path = $request->file('productImage')->storeAs('public/images', $photo_name);
-        }
-        else
-        {
-            $photo_name = $currentProduct->product_image;
-        }
-        $Product_data = [];
-        $Product_data['product_name'] = $request->name;
-        $Product_data['product_description'] = $request->productDescription;
-        $Product_data['price'] = $request->price;
-        $Product_data['stock'] = $request->stock;
-        $Product_data['product_image'] = $photo_name;
-        $Product_data['product_sku'] = $request->skuNumber;
-        // dd($Product_data);
-        $currentProduct->update($Product_data);
-        $category_id = $request->productCategory;
-        $currentProduct->getCategories()->sync($category_id);
-        return redirect()->route('showProduct')->with('success', 'Product updated successfully');
+        return $this->getProductService()->update($request, $id);
     }
 
-    /**
-     * Remove the specified resource from storage.
-     *
-     * @param  int  $id
-     * @return \Illuminate\Http\Response
-     */
     public function destroy($id)
     {
-        $product = new Product();
-        $currentProduct = $product->findProduct($id);
-        // dd($currentProduct);
-        $currentProduct->update([
-            'archive' => 1
-        ]);
-        return redirect()->route('showProduct')->with('success', 'Product archived successfully');
+        return $this->getProductService()->destroy($id);
     }
 
     public function archive()
     {
-        // $request_params = $products;
-        // echo "<pre>";
-        // print_r($request_params);
-        // die();
-        // echo json_encode($products);
-        // dd($products);
-        $p = new Product();
-        $products = $p->getUnactiveDataWithCategories()->paginate(3);
-        return view('product.archive', compact('products'));
+        return $this->getProductService()->archive();
     }
 
     public function unArchive($id)
     {
-        $product = new Product();
-        $currentProduct = $product->findProduct($id);
-        // dd($currentProduct);
-        $currentProduct->update([
-            'archive' => 0
-        ]);
-        return redirect()->route('showArchiveProduct')->with('success', 'Product Unarchive successfully');
+        return $this->getProductService()->unArchive($id);
     }
     public function search(Request $request)
     {
-        $search = $request->search;
-        $p = new Product();
-        $products = $p->getSearchedProducts($search)->paginate(3);
-        return view('product.show', compact('products', 'search'));
+        return $this->getProductService()->search($request);
     }
 }
